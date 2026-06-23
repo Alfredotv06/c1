@@ -1,27 +1,25 @@
-name: Compila Crash Windows Real
+name: Compila Crash Windows CMake
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Installa il Compilatore per Windows
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y mingw-w64 libsdl2-dev make
+    - name: Configura CMake
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
-    - name: Compilazione per Windows (64-bit)
-      run: |
-        make CC=x86_64-w64-mingw32-gcc
+    - name: Compila il Progetto
+      run: cmake --build build --config Release
 
     - name: Salva l'eseguibile Windows
       uses: actions/upload-artifact@v4
       with:
         name: crash-windows-bin
         path: |
-          c1.exe
+          build/Release/c1.exe
+          build/c1.exe
