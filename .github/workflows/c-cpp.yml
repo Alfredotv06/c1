@@ -1,4 +1,4 @@
-name: Compila Crash Windows MSYS2 Permissivo
+name: Compila Crash Windows MSYS2 Patchato
 
 on:
   workflow_dispatch:
@@ -22,10 +22,15 @@ jobs:
           mingw-w64-i686-SDL2_ttf
           make
 
-    - name: Compilazione con Make Permissivo
+    - name: Applica Patch al Codice Sorgente
       shell: msys2 {0}
       run: |
-        make CFLAGS="-w -fpermissive" CXXFLAGS="-w -fpermissive"
+        sed -i 's/SwpClose(swp_access_num);/SwpClose();/g' src/midi.c
+
+    - name: Compilazione con Make
+      shell: msys2 {0}
+      run: |
+        make
 
     - name: Salva l'eseguibile Windows
       uses: actions/upload-artifact@v4
