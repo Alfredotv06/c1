@@ -1,0 +1,28 @@
+name: Compila Crash Bandicoot
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Installa Dipendenze e Compilatore 32-bit
+      run: |
+        sudo dpkg --add-architecture i386
+        sudo apt-get update
+        sudo apt-get install -y gcc-multilib g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 make
+
+    - name: Compilazione con Make
+      run: make
+
+    - name: Salva l'eseguibile nei risultati
+      uses: actions/upload-artifact@v4
+      with:
+        name: crash-pc-port
+        path: |
+          c1
+          *.exe
