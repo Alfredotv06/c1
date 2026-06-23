@@ -1,4 +1,4 @@
-name: Compila Crash Windows CMake
+name: Compila Crash Windows MSYS2
 
 on:
   workflow_dispatch:
@@ -10,16 +10,26 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Configura CMake
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+    - name: Configura MSYS2 ed installa dipendenze
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW32
+        update: true
+        install: >-
+          mingw-w64-i686-gcc
+          mingw-w64-i686-SDL2
+          mingw-w64-i686-SDL2_mixer
+          mingw-w64-i686-SDL2_ttf
+          make
 
-    - name: Compila il Progetto
-      run: cmake --build build --config Release
+    - name: Compilazione con Make
+      shell: msys2 {0}
+      run: |
+        make
 
     - name: Salva l'eseguibile Windows
       uses: actions/upload-artifact@v4
       with:
         name: crash-windows-bin
         path: |
-          build/Release/c1.exe
-          build/c1.exe
+          c1.exe
