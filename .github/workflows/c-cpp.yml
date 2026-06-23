@@ -1,4 +1,4 @@
-name: Compila Crash Bandicoot
+name: Compila Crash Windows Real
 
 on:
   workflow_dispatch:
@@ -10,19 +10,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Installa Dipendenze e Compilatore 32-bit
+    - name: Installa il Compilatore per Windows
       run: |
-        sudo dpkg --add-architecture i386
         sudo apt-get update
-        sudo apt-get install -y gcc-multilib g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 make
+        sudo apt-get install -y mingw-w64 libsdl2-dev make
 
-    - name: Compilazione con Make
-      run: make
+    - name: Compilazione per Windows (64-bit)
+      run: |
+        make CC=x86_64-w64-mingw32-gcc
 
-    - name: Salva l'eseguibile nei risultati
+    - name: Salva l'eseguibile Windows
       uses: actions/upload-artifact@v4
       with:
-        name: crash-pc-port
+        name: crash-windows-bin
         path: |
-          c1
-          *.exe
+          c1.exe
