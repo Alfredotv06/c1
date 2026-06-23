@@ -1,4 +1,4 @@
-name: Compila Crash Windows MSYS2
+name: Compila Crash Windows MSYS2 Permissivo
 
 on:
   workflow_dispatch:
@@ -22,10 +22,10 @@ jobs:
           mingw-w64-i686-SDL2_ttf
           make
 
-    - name: Compilazione con Make
+    - name: Compilazione con Make Permissivo
       shell: msys2 {0}
       run: |
-        make
+        make CFLAGS="-w -fpermissive" CXXFLAGS="-w -fpermissive"
 
     - name: Salva l'eseguibile Windows
       uses: actions/upload-artifact@v4
